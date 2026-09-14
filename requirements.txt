@@ -6,3 +6,4 @@ numpy>=1.26
 pandas>=2.1
 scipy>=1.11
 matplotlib>=3.8
+fsspec[http]>=2023.1.0,<=2026.6.0

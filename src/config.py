@@ -32,7 +32,12 @@ CHUNK_MAX_SENTS = 3
 # ---------------------------------------------------------------- trajectory
 # Escalation target from ESConv seeker survey: delta = final - initial intensity.
 # label = 1  ("non-improving") when delta > -IMPROVEMENT_MARGIN
-IMPROVEMENT_MARGIN = 1.0   # a drop of >=1 point on the 1-5 scale counts as improvement
+IMPROVEMENT_MARGIN = 2.0   # label=1 when delta > -2 (improved by <2 points)
+# WAS 1.0, which yields ZERO positives. ESConv is positively selected: its
+# seeker delta distribution is {-4:107, -3:193, -2:433, -1:417} and never
+# reaches 0 -- the non-improving conversations were removed during collection
+# and released separately as FailedESConv. At 2.0 the target is "insufficient
+# improvement": 417 positives of 1150, base rate 0.363.
 MIN_SEEKER_TURNS = 4       # conversations shorter than this cannot show a trajectory
 
 GRU_HIDDEN = 64
@@ -49,7 +54,9 @@ N_BOOTSTRAP = 1000
 N_FOLDS = 5
 N_REPEATS = 5              # repeated stratified CV: 5 x 5 = 25 conversation-level splits
 
-# Leave-one-group-out OOD split: these ESConv problem types are held out entirely.
-OOD_PROBLEM_TYPES = ["job crisis", "academic pressure"]
+OOD_GROUPS = ["ongoing depression", "job crisis", "breakup with partner",
+              "problems with friends", "academic pressure"]
+# Leave-one-group-out: five folds. The ~86 conversations in minor types
+# (sleep problems, alcohol abuse, etc.) stay in training in every fold.
 
 FLAG_THRESHOLD = 0.6       # turn score above which asynchronous attribution is queued

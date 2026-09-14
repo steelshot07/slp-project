@@ -1,12 +1,28 @@
 #!/usr/bin/env bash
-# Full pipeline. Expect ~25-40 min per seed on a 6GB consumer GPU, longer on CPU.
 set -e
-python -m src.data_prep
-for SEED in 13 29 47 71 97; do
-  echo "=== seed $SEED ==="
-  python -m src.train_turn_encoder --seed $SEED
-  python -m src.score_conversations --seed $SEED
-  python -m src.evaluate --seed $SEED
+python -m src.data_prep                 # Dreaddit + ESConv
+python -m src.prep_cradle               # CRADLE, self-verifying parse
+python -m src.audit                     # ESConv audit -> results/audit.json
+python -m src.cradle_baseline           # TF-IDF floor
+
+for S in 13 29 47 71 97; do             # ESConv trajectory null
+  python -m src.train_turn_encoder --seed $S
+  python -m src.score_conversations --seed $S
+  python -m src.diagnose_scores --seed $S
 done
-python -m src.attribution_service --seed 13 --n 300
-python -m src.aggregate
+
+for S in 13 29 47 71 97; do             # CRADLE 3-arm ablation
+  for A in gru none mean; do
+    python -m src.cradle_tagger --arm $A --seed $S
+  done
+done
+for S in 13 71 97; do                   # 12-epoch robustness check
+  for A in gru none mean; do
+    python -m src.cradle_tagger --arm $A --seed $S --epochs 12
+  done
+done
+
+for S in 13 29 47; do                   # matched-size transfer
+  python -m src.transfer_experiment --seed $S
+done
+python -m src.make_figures

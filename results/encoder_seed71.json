@@ -1,0 +1,9 @@
+{
+  "seed": 71,
+  "temperature": 1.848886251449585,
+  "test_f1": 0.8285356695869838,
+  "test_acc": 0.8083916083916084,
+  "test_auroc": 0.8920140357472939,
+  "train_minutes": 2.639915970961253,
+  "encoder": "distilroberta-base"
+}

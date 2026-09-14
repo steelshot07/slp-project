@@ -1,0 +1,6 @@
+.venv
+data
+esconv_prepared
+artifacts
+__pycache__/
+*.pyc

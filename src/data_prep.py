@@ -80,7 +80,7 @@ def build_dreaddit():
     tr = tr[[text_col, "label", "subreddit"]].rename(columns={text_col: "text"})
     te = te[[text_col, "label", "subreddit"]].rename(columns={text_col: "text"})
 
-    # carve a calibration/validation split out of train, stratified, subreddit-disjoint
+    # carve a calibration/validation split out of train, post-disjoint
     rng = np.random.default_rng(SEEDS[0])
     idx = rng.permutation(len(tr))
     n_val = int(0.15 * len(tr))
@@ -108,7 +108,7 @@ def _load_esconv_raw():
     """Try HuggingFace first, then a direct download of the released JSON."""
     local = RAW / "ESConv.json"
     if local.exists():
-        with open(local) as f:
+        with open(local, encoding="utf-8") as f:
             return json.load(f)
     try:
         from datasets import load_dataset
@@ -123,7 +123,7 @@ def _load_esconv_raw():
     try:
         url = "https://raw.githubusercontent.com/thu-coai/Emotional-Support-Conversation/main/ESConv.json"
         _fetch("ESConv.json", url)
-        with open(local) as f:
+        with open(local, encoding="utf-8") as f:
             return json.load(f)
     except Exception as e:                                    # noqa: BLE001
         print(f"  ! direct download failed ({e}).")
@@ -136,6 +136,57 @@ def _as_int(x, default=None):
         return int(float(x))
     except (TypeError, ValueError):
         return default
+
+
+SEEKER_ALIASES = {"seeker", "usr", "user", "speaker"}
+
+
+def _is_seeker(raw):
+    """ESConv uses seeker/supporter; FailedESConv uses speaker/listener.
+    Without this, every FailedESConv conversation silently yields zero turns."""
+    return (raw or "").strip().lower() in SEEKER_ALIASES
+
+
+def build_failed_esconv():
+    """FailedESConv -> EXTERNAL OOD set only. NEVER merged into training.
+
+    Its release rule selects ON the outcome ("negative emotion intensity does
+    not decrease"), so merging it with ESConv makes corpus identity a
+    near-perfect predictor of the label: base rate 0.885 vs 0.363. Any gain a
+    trajectory model shows on the merged corpus is provenance detection.
+    """
+    local = RAW / "FailedESConv.json"
+    if not local.exists():
+        print("FailedESConv: not in data/raw -- skipping OOD set.")
+        return
+    print("FailedESConv (external OOD only):")
+    raw = json.load(open(local, encoding="utf-8"))
+    kept = []
+    for i, conv in enumerate(raw):
+        survey = (conv.get("survey_score") or {}).get("seeker", {})
+        init = _as_int(survey.get("initial_emotion_intensity"))
+        fin = _as_int(survey.get("final_emotion_intensity"))
+        if init is None or fin is None:
+            continue
+        st = [(t.get("content") or "").strip() for t in conv.get("dialog", [])
+              if _is_seeker(t.get("speaker")) and (t.get("content") or "").strip()]
+        if len(st) < MIN_SEEKER_TURNS:
+            continue
+        delta = fin - init
+        kept.append({"conv_id": f"failed_{i:05d}",
+                     "problem_type": str(conv.get("problem_type", "unknown")).strip().lower(),
+                     "emotion_type": conv.get("emotion_type", "unknown"),
+                     "situation": conv.get("situation", ""),
+                     "seeker_turns": st, "n_seeker_turns": len(st),
+                     "initial_intensity": init, "final_intensity": fin,
+                     "delta": delta,
+                     "label": int(delta > -IMPROVEMENT_MARGIN)})
+    with open(DATA / "failed_esconv_ood.jsonl", "w") as f:
+        for r in kept:
+            f.write(json.dumps(r) + "\n")
+    pos = sum(r["label"] for r in kept)
+    print(f"  kept {len(kept)} conversations, {pos} positive "
+          f"({pos / max(len(kept), 1):.1%}) -- NOT for training")
 
 
 def build_esconv():
@@ -161,7 +212,7 @@ def build_esconv():
                 continue
             turns.append({"speaker": speaker, "text": content})
 
-        seeker_turns = [t["text"] for t in turns if t["speaker"] in ("seeker", "usr", "user")]
+        seeker_turns = [t["text"] for t in turns if _is_seeker(t["speaker"])]
         if len(seeker_turns) < MIN_SEEKER_TURNS:
             dropped["too_short"] += 1
             continue
@@ -169,7 +220,7 @@ def build_esconv():
         delta = fin - init
         kept.append({
             "conv_id": f"esconv_{i:05d}",
-            "problem_type": conv.get("problem_type", "unknown"),
+            "problem_type": str(conv.get("problem_type", "unknown")).strip().lower(),
             "emotion_type": conv.get("emotion_type", "unknown"),
             "experience_type": conv.get("experience_type", "unknown"),
             "situation": conv.get("situation", ""),
@@ -200,4 +251,5 @@ def build_esconv():
 if __name__ == "__main__":
     build_dreaddit()
     build_esconv()
+    build_failed_esconv()
     print("\nStage 1 complete.")

@@ -1,0 +1,156 @@
+{
+  "arm": "none",
+  "seed": 71,
+  "epochs": 12,
+  "val_curve": [
+    {
+      "epoch": 0,
+      "val_micro_f1": 0.26525494566731683,
+      "val_macro_f1": 0.3243401435051359
+    },
+    {
+      "epoch": 1,
+      "val_micro_f1": 0.42257597684515197,
+      "val_macro_f1": 0.45531697034398066
+    },
+    {
+      "epoch": 2,
+      "val_micro_f1": 0.452473596442468,
+      "val_macro_f1": 0.4922017371517148
+    },
+    {
+      "epoch": 3,
+      "val_micro_f1": 0.4857938718662953,
+      "val_macro_f1": 0.5561835095276065
+    },
+    {
+      "epoch": 4,
+      "val_micro_f1": 0.524092409240924,
+      "val_macro_f1": 0.5600926801987827
+    },
+    {
+      "epoch": 5,
+      "val_micro_f1": 0.5633802816901409,
+      "val_macro_f1": 0.561003135064496
+    },
+    {
+      "epoch": 6,
+      "val_micro_f1": 0.5305841924398625,
+      "val_macro_f1": 0.5135694882902339
+    },
+    {
+      "epoch": 7,
+      "val_micro_f1": 0.5673534072900158,
+      "val_macro_f1": 0.5340182858322506
+    },
+    {
+      "epoch": 8,
+      "val_micro_f1": 0.5746333045729077,
+      "val_macro_f1": 0.5756365492286687
+    },
+    {
+      "epoch": 9,
+      "val_micro_f1": 0.551948051948052,
+      "val_macro_f1": 0.49353694157470007
+    },
+    {
+      "epoch": 10,
+      "val_micro_f1": 0.5576592082616179,
+      "val_macro_f1": 0.5215035333264374
+    },
+    {
+      "epoch": 11,
+      "val_micro_f1": 0.5592264302981466,
+      "val_macro_f1": 0.5259452057151801
+    }
+  ],
+  "best_epoch": 8,
+  "params_m": 82.319376,
+  "encoder": "distilroberta-base",
+  "val_micro_f1_at_best": 0.5746333045729077,
+  "global_threshold": 0.9499999999999997,
+  "global_val_micro_f1": 0.5942857142857143,
+  "per_label_thresholds": [
+    0.3,
+    0.3,
+    0.5,
+    0.5,
+    0.9499999999999997,
+    0.9499999999999997,
+    0.5,
+    0.3,
+    0.9499999999999997,
+    0.8999999999999999,
+    0.9499999999999997,
+    0.9499999999999997,
+    0.9499999999999997,
+    0.5,
+    0.7999999999999998,
+    0.5
+  ],
+  "micro_f1": 0.3178571428571429,
+  "macro_f1": 0.2991824857769455,
+  "micro_p": 0.4352078239608802,
+  "micro_r": 0.25035161744022505,
+  "alert_micro_f1": 0.11046511627906976,
+  "perlabel_micro_f1": 0.30817610062893075,
+  "perlabel_macro_f1": 0.2988501425208155,
+  "perlabel_micro_p": 0.3493761140819964,
+  "perlabel_micro_r": 0.27566807313642755,
+  "perlabel_alert_micro_f1": 0.13793103448275862,
+  "per_label_f1_global": {
+    "alert_ongoing": 0.12927756653992395,
+    "alert_past": 0.04938271604938271,
+    "confirm_CA_ongoing": 0.2222222222222222,
+    "confirm_CA_past": 0.2631578947368421,
+    "confirm_DV_ongoing": 0.19999999999999998,
+    "confirm_DV_past": 0.23809523809523805,
+    "confirm_RA_ongoing": 0.30769230769230765,
+    "confirm_RA_past": 0.5656565656565656,
+    "confirm_SH_ongoing": 0.5072463768115941,
+    "confirm_SH_past": 0.4878048780487805,
+    "confirm_SHA_ongoing": 0.34782608695652173,
+    "confirm_SHA_past": 0.1276595744680851,
+    "confirm_SI_active_ongoing": 0.4,
+    "confirm_SI_active_past": 0.0,
+    "confirm_SI_passive_ongoing": 0.4964539007092199,
+    "confirm_SI_passive_past": 0.4444444444444445
+  },
+  "per_label_f1_perlabel": {
+    "alert_ongoing": 0.15803814713896455,
+    "alert_past": 0.06185567010309278,
+    "confirm_CA_ongoing": 0.2,
+    "confirm_CA_past": 0.2325581395348837,
+    "confirm_DV_ongoing": 0.19999999999999998,
+    "confirm_DV_past": 0.23809523809523805,
+    "confirm_RA_ongoing": 0.25,
+    "confirm_RA_past": 0.5405405405405405,
+    "confirm_SH_ongoing": 0.5072463768115941,
+    "confirm_SH_past": 0.4878048780487805,
+    "confirm_SHA_ongoing": 0.34782608695652173,
+    "confirm_SHA_past": 0.1276595744680851,
+    "confirm_SI_active_ongoing": 0.4,
+    "confirm_SI_active_past": 0.13333333333333333,
+    "confirm_SI_passive_ongoing": 0.49664429530201337,
+    "confirm_SI_passive_past": 0.4
+  },
+  "test_support": {
+    "alert_ongoing": 172,
+    "alert_past": 64,
+    "confirm_CA_ongoing": 8,
+    "confirm_CA_past": 27,
+    "confirm_DV_ongoing": 25,
+    "confirm_DV_past": 31,
+    "confirm_RA_ongoing": 7,
+    "confirm_RA_past": 59,
+    "confirm_SH_ongoing": 77,
+    "confirm_SH_past": 27,
+    "confirm_SHA_ongoing": 23,
+    "confirm_SHA_past": 40,
+    "confirm_SI_active_ongoing": 58,
+    "confirm_SI_active_past": 11,
+    "confirm_SI_passive_ongoing": 78,
+    "confirm_SI_passive_past": 4
+  },
+  "minutes": 19.249496416250864
+}

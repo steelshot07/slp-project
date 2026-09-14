@@ -1,0 +1,34 @@
+{
+  "seed": 29,
+  "n_conversations": 1150,
+  "n_turns": 17990,
+  "pooled_mean": 0.5168702006340027,
+  "pooled_sd": 0.2635730803012848,
+  "mean_within_sd": 0.24840398132801056,
+  "between_sd": 0.08991307765245438,
+  "icc": 0.11206708251424781,
+  "auroc": {
+    "mean": 0.5241100434795412,
+    "slope": 0.5208286304108145,
+    "frac_above_half": 0.519063603142043,
+    "last_minus_first": 0.5173263844585996,
+    "last": 0.501307003510425,
+    "secondhalf_minus_firsthalf": 0.494125845299204,
+    "sd": 0.492755045622438,
+    "max": 0.48573419572663834,
+    "first": 0.47400388011555283
+  },
+  "position_profile": [
+    0.6690863140719088,
+    0.6381304484950624,
+    0.5935016927241215,
+    0.550761885882164,
+    0.5155689183765702,
+    0.4965605356575929,
+    0.45545336008953624,
+    0.4292734441010745,
+    0.3884145817992694,
+    0.34959346752872955
+  ],
+  "verdict": "STOP. No summary beats chance. The scores carry no signal about the target; the trajectory layer cannot rescue this."
+}
